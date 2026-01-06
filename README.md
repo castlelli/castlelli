@@ -1,16 +1,24 @@
-## Hi there 👋
+<div align="center">
+  <img src="https://user-images.githubusercontent.com/74038190/225813708-98b745f2-7d22-48cf-9150-083f1b00d6c9.gif" width="800"/>
+</div>
 
-<!--
-**castlelli/castlelli** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+## Hey, I'm Castelli.
 
-Here are some ideas to get you started:
+Nice to meet you! I'm Vinicius Castelli, an incoming Computer Engineering student and IT professional. 
+I've been/still am an entrepeneur, executive and a harcore developer, and generated thousands of dollars in results as such. I’ve built and led projects across different stages, combining technical execution with strategic decision-making. Today, my focus is strengthening my engineering fundamentals, and continuously evolving as a builder, leader, and problem-solver.
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+I'm available for hire. Let's rock.
+
+## Skills and Technologies
+
+<div align="center">
+
+[![My Skills](https://skillicons.dev/icons?i=c,cpp,cs,java,py,js,ts,kotlin&perline=8)](https://skillicons.dev)
+
+[![My Skills](https://skillicons.dev/icons?i=dotnet,php,nodejs,adonis,laravel,nextjs,nuxtjs&perline=7)](https://skillicons.dev)
+
+[![My Skills](https://skillicons.dev/icons?i=react,vue,bootstrap,html,css,sass&perline=6)](https://skillicons.dev)
+
+[![My Skills](https://skillicons.dev/icons?i=mysql,postgres,sqlite,firebase,git,github,githubactions,windows,npm,notion&perline=5)](https://skillicons.dev)
+
+</div>
