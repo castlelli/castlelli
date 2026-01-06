@@ -11,6 +11,7 @@ I've graduated from the best high-school in my state, and the fourth best in Bra
 <br>
 I'm available for hire. Let's rock.
 </p>
+
 ## Skills and Technologies
 
 <div align="center">
