@@ -2,6 +2,8 @@
   <img src="https://user-images.githubusercontent.com/74038190/225813708-98b745f2-7d22-48cf-9150-083f1b00d6c9.gif" width="800"/>
 </div>
 
+
+
 ## Hey, I'm Castelli.
 
 Nice to meet you! I'm Vinicius Castelli, an incoming Computer Engineering student and IT professional.<br><br>
@@ -12,16 +14,29 @@ I graduated from the top-ranked high school in my state and the fourth best in B
 
 I am available for hire. Let's rock.
 
-## Skills and Technologies
+## 📊 GitHub Statistics
 
 <div align="center">
+  <img src="https://github.com/castlelli/castlelli/blob/main/github-metrics.svg" width="50%" alt="GitHub Metrics">
 
-[![My Skills](https://skillicons.dev/icons?i=c,cpp,cs,java,py,js,ts,kotlin&perline=8)](https://skillicons.dev)
+  <br><br>
 
-[![My Skills](https://skillicons.dev/icons?i=dotnet,php,nodejs,adonis,laravel,nextjs,nuxtjs&perline=7)](https://skillicons.dev)
-
-[![My Skills](https://skillicons.dev/icons?i=react,vue,bootstrap,html,css,sass&perline=6)](https://skillicons.dev)
-
-[![My Skills](https://skillicons.dev/icons?i=mysql,postgres,sqlite,firebase,git,github,githubactions,windows,npm,notion&perline=5)](https://skillicons.dev)
+  ### 🛠️ Skills & Technologies
+  
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=c,cpp,cs,java,py,js,ts,kotlin&perline=8" alt="Languages" />
+  </a>
+  <br>
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=dotnet,php,nodejs,adonis,laravel,nextjs,nuxtjs&perline=7" alt="Frameworks" />
+  </a>
+  <br>
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=react,vue,bootstrap,html,css,sass&perline=6" alt="Frontend" />
+  </a>
+  <br>
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=mysql,postgres,sqlite,firebase,git,github,githubactions,windows,npm,notion&perline=10" alt="Tools & DB" />
+  </a>
 
 </div>
