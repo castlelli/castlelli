@@ -1,7 +1,7 @@
 name: Metrics
 on:
-  schedule: [{ cron: '0 0 * * *' }] # Atualiza todo dia à meia-noite
-  workflow_dispatch:
+  schedule: [{cron: "0 0 * * *"}] # Atualiza todo dia
+  workflow_dispatch: # Permite rodar manualmente
 jobs:
   github-metrics:
     runs-on: ubuntu-latest
@@ -12,6 +12,6 @@ jobs:
           user: castlelli
           template: classic
           base: header, activity, community, repositories, metadata
-          plugin_lines: yes # Para mostrar "Lines of code changed"
-          plugin_followup: yes # Para mostrar "Repositories with contributions"
-          plugin_isocalendar: yes
+          base_indepth: yes # Para estatísticas detalhadas
+          plugin_lines: yes # Exibe "Lines of code changed"
+          plugin_followup: yes # Exibe "Repositories with contributions"
