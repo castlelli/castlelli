@@ -6,7 +6,7 @@
 
 ## Hey, I'm Castelli.
 
-Nice to meet you! I'm Vinicius Castelli, an incoming Computer Engineering student and IT professional.<br><br>
+Nice to meet you! I'm Vinicius Castelli, a Computer Engineering student and IT professional.<br><br>
 
 I have experience as an entrepreneur, executive, and hands-on developer, delivering software products and generating measurable business results. I’ve built and led projects across different stages, combining strong technical execution with strategic decision-making. Currently, my focus is on strengthening my engineering fundamentals while continuously evolving as a builder, leader, and problem-solver.<br><br>
 
