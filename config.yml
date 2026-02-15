@@ -1,13 +1,5 @@
 # Galaxy Profile README Configuration
 # Copy this file to config.yml and customize it to make it your own!
-#
-# Usage:
-#   cp config.example.yml config.yml
-#   # Edit config.yml with your details
-#   python -m generator.main
-#
-# Demo mode (no API calls, uses this file directly):
-#   python -m generator.main --demo
 
 # Your GitHub username (required)
 username: castlelli
@@ -19,66 +11,71 @@ profile:
   company: "Self Employed at Castelli Labs"
   location: "São Paulo, Brazil"
   bio: |
-    Building tools that make developers' lives easier.
-    Passionate about distributed systems, developer experience, and the open-source ecosystem.
-  philosophy: '"The best code is the code that empowers others."'
+    Building AI-powered solutions to help people get rid of boring, repetitive processes and focus on what only humans can do.  
+  philosophy: '"Study the science of art. Study the art of science." - Leonardo da Vinci'
 
 # Social links displayed at the bottom of the profile
 social:
   email: "vcastelli@usp.br"
   linkedin: "vinicius-castelli-812a36240"
-  website: ""
-
 # Galaxy arms represent your core focus areas
-# Each arm spirals out from the center with its own color and tech items
-# Available colors: "synapse_cyan", "dendrite_violet", "axon_amber"
+# Keys kept distinct for script compatibility
 galaxy_arms:
-  - name: "Frontend"
-    color: "dendrite_violet"
+  - name: "Product Design & Frontend"
+    color: "axon_amber"      # Mapped to Acid Green (Your Brand Signature)
     items:
-      - "TypeScript"
+      - "Typescript"
       - "React"
-      - "CSS"
-  - name: "Backend"
-    color: "synapse_cyan"
+      - "Tailwind"
+      - "Next.js"
+      - "Vue.js"
+      - "Figma"
+  - name: "Backend & APIs"
+    color: "dendrite_violet" # Mapped to Deep Plasma Purple (Galactic Vibe)
     items:
+      - "FastAPI"
+      - "Django"
+      - "Entity Framework"
+      - "Laravel"
+      - "Spring Boot"
       - "Python"
-      - "Node.js"
-      - "PostgreSQL"
-  - name: "DevOps"
-    color: "axon_amber"
+      - "C# .NET"
+      - "Java"
+      - "PHP"
+      - "C & C++"
+  - name: "AI & Automations"
+    color: "synapse_cyan"    # Mapped to Electric Cyan (Industrial Tech)
     items:
-      - "Docker"
-      - "GitHub Actions"
-      - "AWS"
+      - "n8n"
+      - "OpenAI"
+      - "Anthropic"
+      - "Gemini"
+      - "Crawl4AI"
 
 # Featured projects shown as constellation stars
-# Each project needs:
-#   repo: "owner/repo-name"   — GitHub repository path
-#   arm: 0-2                  — Which galaxy arm to associate with (index)
-#   description: "..."        — Short description shown on the card
 projects:
-  - repo: "galaxy-dev/nebula-ui"
+  - repo: "castlelli/atlassp"
     arm: 0
-    description: "A component library with cosmic design tokens and dark-first theming."
-  - repo: "galaxy-dev/stargate-api"
-    arm: 1
-    description: "High-performance API gateway with built-in observability and caching."
+    description: "A powerful, open-source solution of intelligent data about the State of São Paulo, Brazil."
 
-# Theme color overrides (optional — defaults to deep space palette)
-# All values must be valid hex color codes (#RRGGBB)
+# Theme color overrides
+# "TOXIC GALAXY" PALETTE - Industrial Sci-Fi
 theme:
-  void: "#080c14"              # Darkest background
-  nebula: "#0f1623"            # Card backgrounds
-  star_dust: "#1a2332"         # Borders, dividers
-  synapse_cyan: "#00d4ff"      # Primary accent (arm color 1)
-  dendrite_violet: "#a78bfa"   # Secondary accent (arm color 2)
-  axon_amber: "#ffb020"        # Tertiary accent (arm color 3)
-  text_bright: "#f1f5f9"       # Primary text
-  text_dim: "#94a3b8"          # Secondary text
-  text_faint: "#64748b"        # Muted text, labels
+  void: "#050608"              # Base: Deep Space Black (Mais escuro que o Carbono original para contraste)
+  nebula: "#0B0C10"            # Cards: Carbono Industrial (Sua cor base original)
+  star_dust: "#1F2833"         # Borders: Aço Escuro
+  
+  # Galactic Industrial Accents:
+  axon_amber: "#D4FF00"        # Acid Green (Sua Identidade Principal - Toxic)
+  dendrite_violet: "#BD00FF"   # Plasma Purple (Substitui o vermelho - Vibe Galáctica)
+  synapse_cyan: "#00F0FF"      # Electric Cyan (Tecnologia/Frio Industrial)
+  
+  # Text Colors
+  text_bright: "#E3E4E6"       # Texto: Aço Escovado (Legibilidade Industrial)
+  text_dim: "#8892b0"          # Texto Secundário: Cinza Azulado (Espacial)
+  text_faint: "#45A29E"        # Labels: Cianeto Oxidado
 
-# Stats configuration — which metrics to show on the telemetry card
+# Stats configuration
 stats:
   metrics:
     - "commits"
@@ -89,9 +86,9 @@ stats:
 
 # Language display settings
 languages:
-  exclude:                     # Languages to hide from the telemetry chart
+  exclude:
     - "HTML"
     - "CSS"
     - "Shell"
     - "Makefile"
-  max_display: 8               # Maximum number of languages to show
+  max_display: 8

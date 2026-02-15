@@ -49,42 +49,16 @@ I graduated from the top-ranked high school in my state and the fourth best in B
 
 I am available for hire. Let's rock.
 
-## 📊 GitHub Statistics
-
-<div align="center">
-  <img src="https://github.com/castlelli/castlelli/blob/main/github-metrics.svg" width="50%" alt="GitHub Metrics">
-
-  <br><br>
-
-  ### 🛠️ Skills & Technologies
-  
-  <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=c,cpp,cs,java,py,js,ts,kotlin&perline=8" alt="Languages" />
-  </a>
-  <br>
-  <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=dotnet,php,nodejs,adonis,laravel,nextjs,nuxtjs&perline=7" alt="Frameworks" />
-  </a>
-  <br>
-  <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=react,vue,bootstrap,html,css,sass&perline=6" alt="Frontend" />
-  </a>
-  <br>
-  <a href="https://skillicons.dev">
-    <img src="https://skillicons.dev/icons?i=mysql,postgres,sqlite,firebase,git,github,githubactions,windows,npm,notion&perline=10" alt="Tools & DB" />
-  </a>
-
-</div>
 
 </details>
 
 <br/>
 
 <div align="center">
-  <a href="mailto:nyx@stellarlabs.dev">
+  <a href="mailto:vcastelli@usp.br">
     <img src="https://img.shields.io/badge/-Email-080c14?style=for-the-badge&logo=gmail&logoColor=00d4ff" alt="Email"/>
   </a>
-  <a href="https://www.linkedin.com/in/nyxorion/">
+  <a href="https://www.linkedin.com/in/vinicius-castelli-812a36240/">
     <img src="https://img.shields.io/badge/-LinkedIn-080c14?style=for-the-badge&logo=linkedin&logoColor=a78bfa" alt="LinkedIn"/>
   </a>
 </div>
