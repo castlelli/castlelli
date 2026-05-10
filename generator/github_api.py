@@ -61,31 +61,33 @@ class GitHubAPI:
 
     def _fetch_stats_graphql(self) -> dict:
         """Fetch stats via GraphQL for accurate counts including private contributions."""
-        query = """
-        query($username: String!) {
-          user(login: $username) {
-            repositoriesContributedTo(contributionTypes: [COMMIT, PULL_REQUEST, ISSUE]) {
-              totalCount
-            }
-            pullRequests {
-              totalCount
-            }
-            issues {
-              totalCount
-            }
-            repositories(ownerAffiliations: OWNER, first: 100) {
-              totalCount
-              nodes {
-                stargazerCount
-              }
-            }
-            contributionsCollection {
-              totalCommitContributions
-              restrictedContributionsCount
-            }
-          }
-        }
-        """
+                query = """
+                query($username: String!) {
+                    user(login: $username) {
+                        repositoriesContributedTo(contributionTypes: [COMMIT, PULL_REQUEST, ISSUE], privacy: ALL) {
+                            totalCount
+                        }
+                        pullRequests {
+                            totalCount
+                        }
+                        issues {
+                            totalCount
+                        }
+                        repositories(ownerAffiliations: OWNER, privacy: ALL, first: 100) {
+                            totalCount
+                            nodes {
+                                stargazerCount
+                                isFork
+                                isPrivate
+                            }
+                        }
+                        contributionsCollection {
+                            totalCommitContributions
+                            restrictedContributionsCount
+                        }
+                    }
+                }
+                """
         try:
             resp = self._request(
                 "POST",
@@ -110,7 +112,9 @@ class GitHubAPI:
         contrib = user["contributionsCollection"]
         repos = user["repositories"]
 
-        total_stars = sum(n["stargazerCount"] for n in repos["nodes"])
+        # Only count stars for non-fork repositories; include private repos when
+        # authenticated (privacy: ALL in the query) so private repo stars are included.
+        total_stars = sum(n["stargazerCount"] for n in repos["nodes"] if not n.get("isFork"))
         total_commits = (
             contrib["totalCommitContributions"]
             + contrib["restrictedContributionsCount"]

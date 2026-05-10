@@ -37,18 +37,15 @@
   <img src="https://user-images.githubusercontent.com/74038190/225813708-98b745f2-7d22-48cf-9150-083f1b00d6c9.gif" width="800"/>
 </div>
 
-
-
 ## Hey, I'm Castelli.
 
-Nice to meet you! I'm Vinicius Castelli, a Computer Engineering student and IT professional.<br><br>
+Nice to meet you! I'm **Vinicius Castelli**, a Computer Engineering student and IT professional.
 
-I have experience as an entrepreneur, executive, and hands-on developer, delivering software products and generating measurable business results. I’ve built and led projects across different stages, combining strong technical execution with strategic decision-making. Currently, my focus is on strengthening my engineering fundamentals while continuously evolving as a builder, leader, and problem-solver.<br><br>
+I have experience as an entrepreneur, executive, and hands-on developer, delivering software products and generating measurable business results. I've built and led projects across different stages, combining strong technical execution with strategic decision-making. Currently, my focus is on strengthening my engineering fundamentals while continuously evolving as a builder, leader, and problem-solver.
 
-I graduated from the top-ranked high school in my state and the fourth best in Brazil (IDEB, 2024). During that period, I developed several impactful projects—both software-related and interdisciplinary—including one that permanently transformed the school’s largest annual event. You can learn more about these projects and my overall trajectory on my LinkedIn.<br><br>
+I graduated from the top-ranked high school in my state and the fourth best in Brazil (IDEB, 2024). During that period, I developed several impactful projects (both software-related and interdisciplinary) including one that permanently transformed the school's largest annual event. You can learn more about these projects and my overall trajectory on my [LinkedIn](https://www.linkedin.com/in/vinicius-castelli-812a36240/).
 
-I am available for hire. Let's rock.
-
+Currently, I'm building a comprehensive comparative genomics library in bioinformatics, and expanding into new domains through a robotics/IMAVs team — where I'm developing my mechanical engineering skills while contributing to the team's financial operations.
 
 </details>
 
@@ -62,11 +59,3 @@ I am available for hire. Let's rock.
     <img src="https://img.shields.io/badge/-LinkedIn-080c14?style=for-the-badge&logo=linkedin&logoColor=a78bfa" alt="LinkedIn"/>
   </a>
 </div>
-
-
-
-
-
-
-
-

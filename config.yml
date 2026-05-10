@@ -7,11 +7,11 @@ username: castlelli
 # Profile information displayed in the galaxy header
 profile:
   name: "Vinicius Castelli"
-  tagline: "Full Stack Developer & Engineer"
-  company: "Self Employed at Castelli Labs"
+  tagline: "Full Stack Developer & Engineering Student"
+  company: "Scients at São Paulo Biomedical Sciences Institute"
   location: "São Paulo, Brazil"
   bio: |
-    Building AI-powered solutions to help people get rid of boring, repetitive processes and focus on what only humans can do.  
+    Engineer, entrepeneur and relentless problem-solver.
   philosophy: '"Study the science of art. Study the art of science." - Leonardo da Vinci'
 
 # Social links displayed at the bottom of the profile
@@ -22,7 +22,7 @@ social:
 # Keys kept distinct for script compatibility
 galaxy_arms:
   - name: "Product Design & Frontend"
-    color: "axon_amber"      # Mapped to Acid Green (Your Brand Signature)
+    color: "white" # Mapped to Acid Green (Your Brand Signature)
     items:
       - "Typescript"
       - "React"
@@ -37,43 +37,42 @@ galaxy_arms:
       - "Django"
       - "Entity Framework"
       - "Laravel"
-      - "Spring Boot"
-      - "Python"
-      - "C# .NET"
-      - "Java"
-      - "PHP"
+      - "Java & Spring"
       - "C & C++"
-  - name: "AI & Automations"
-    color: "synapse_cyan"    # Mapped to Electric Cyan (Industrial Tech)
+  - name: "Bioinformatics"
+    color: "axon_amber"
     items:
-      - "n8n"
-      - "OpenAI"
-      - "Anthropic"
-      - "Gemini"
-      - "Crawl4AI"
+      - "Biopython"
+      - "Pandas"
+      - "Genomic Big Data"
 
 # Featured projects shown as constellation stars
 projects:
-  - repo: "castlelli/atlassp"
-    arm: 0
-    description: "A powerful, open-source solution of intelligent data about the State of São Paulo, Brazil."
+  - repo: "(soon)"
+    arm:
+    description: "Smart pest control to smallholder farmers w/ affordable hardware, actionable insights, and zero agrochemical guesswork. Coming soon."
+  - repo: "leepbioinfo/rotifer"
+    arm: 1
+    description: "A powerful, open-source and robust tool for comparative genomics and all-purpose bioinformatics."
+  -
 
 # Theme color overrides
 # "TOXIC GALAXY" PALETTE - Industrial Sci-Fi
 theme:
-  void: "#050608"              # Base: Deep Space Black (Mais escuro que o Carbono original para contraste)
-  nebula: "#0B0C10"            # Cards: Carbono Industrial (Sua cor base original)
-  star_dust: "#1F2833"         # Borders: Aço Escuro
-  
+  void: "#050608" # Base: Deep Space Black (Mais escuro que o Carbono original para contraste)
+  nebula: "#0B0C10" # Cards: Carbono Industrial (Sua cor base original)
+  star_dust: "#1F2833" # Borders: Aço Escuro
+
   # Galactic Industrial Accents:
-  axon_amber: "#D4FF00"        # Acid Green (Sua Identidade Principal - Toxic)
-  dendrite_violet: "#BD00FF"   # Plasma Purple (Substitui o vermelho - Vibe Galáctica)
-  synapse_cyan: "#00F0FF"      # Electric Cyan (Tecnologia/Frio Industrial)
-  
+  axon_amber: "#D4FF00" # Acid Green (Sua Identidade Principal - Toxic)
+  dendrite_violet: "#BD00FF" # Plasma Purple (Substitui o vermelho - Vibe Galáctica)
+  synapse_cyan: "#00F0FF" # Electric Cyan (Tecnologia/Frio Industrial)
+  white: "F2F2F2"
+
   # Text Colors
-  text_bright: "#E3E4E6"       # Texto: Aço Escovado (Legibilidade Industrial)
-  text_dim: "#8892b0"          # Texto Secundário: Cinza Azulado (Espacial)
-  text_faint: "#45A29E"        # Labels: Cianeto Oxidado
+  text_bright: "#E3E4E6" # Texto: Aço Escovado (Legibilidade Industrial)
+  text_dim: "#8892b0" # Texto Secundário: Cinza Azulado (Espacial)
+  text_faint: "#45A29E" # Labels: Cianeto Oxidado
 
 # Stats configuration
 stats:
