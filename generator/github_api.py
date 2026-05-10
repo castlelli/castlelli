@@ -61,7 +61,7 @@ class GitHubAPI:
 
     def _fetch_stats_graphql(self) -> dict:
         """Fetch stats via GraphQL for accurate counts including private contributions."""
-                query = """
+        query = """
                 query($username: String!) {
                     user(login: $username) {
                         repositoriesContributedTo(contributionTypes: [COMMIT, PULL_REQUEST, ISSUE], privacy: ALL) {
