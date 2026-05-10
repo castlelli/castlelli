@@ -45,16 +45,18 @@ galaxy_arms:
       - "Biopython"
       - "Pandas"
       - "Genomic Big Data"
+      - "Machine Learning"
+      - "AI for Science"
+      - "Comparative Genomics"
 
 # Featured projects shown as constellation stars
 projects:
   - repo: "(soon)"
-    arm: 0
-    description: "Smart pest control to smallholder farmers w/ affordable hardware, actionable insights, and zero agrochemical guesswork. Coming soon."
+    arm: 2
+    description: "Smart pest control for farmers w/ low-cost hardware. Coming soon."
   - repo: "leepbioinfo/rotifer"
-    arm: 1
-    description: "A powerful, open-source and robust tool for comparative genomics and all-purpose bioinformatics."
-  -
+    arm: 2
+    description: "A powerful, open-source and robust tool for comparative genomics & bioinformatics."
 
 # Theme color overrides
 # "TOXIC GALAXY" PALETTE - Industrial Sci-Fi
@@ -67,7 +69,7 @@ theme:
   axon_amber: "#D4FF00" # Acid Green (Sua Identidade Principal - Toxic)
   dendrite_violet: "#BD00FF" # Plasma Purple (Substitui o vermelho - Vibe Galáctica)
   synapse_cyan: "#00F0FF" # Electric Cyan (Tecnologia/Frio Industrial)
-  white: "F2F2F2"
+  white: "#F2F2F2"
 
   # Text Colors
   text_bright: "#E3E4E6" # Texto: Aço Escovado (Legibilidade Industrial)
