@@ -49,7 +49,7 @@ galaxy_arms:
 # Featured projects shown as constellation stars
 projects:
   - repo: "(soon)"
-    arm:
+    arm: 0
     description: "Smart pest control to smallholder farmers w/ affordable hardware, actionable insights, and zero agrochemical guesswork. Coming soon."
   - repo: "leepbioinfo/rotifer"
     arm: 1
