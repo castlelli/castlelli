@@ -9,7 +9,7 @@ import requests
 import yaml
 
 from generator.config import ConfigError, validate_config
-from generator.github_api import GitHubAPI
+from generator.github_api import GitHubAPI, StatsFetchError
 from generator.svg_builder import SVGBuilder
 
 logger = logging.getLogger(__name__)
@@ -25,6 +25,13 @@ DEMO_LANGUAGES = {
     "Dockerfile": 15000,
     "CSS": 10000,
 }
+
+
+def _actions_error(title: str, message: str):
+    """Emit a GitHub Actions error annotation so failures surface in the run UI."""
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        flat = message.replace("\n", " ").replace("\r", " ")
+        print(f"::error title={title}::{flat}", file=sys.stderr)
 
 
 def generate(args):
@@ -74,9 +81,13 @@ def generate(args):
         logger.info("Fetching stats...")
         try:
             stats = api.fetch_stats()
-        except (requests.exceptions.RequestException, ValueError, KeyError) as e:
-            logger.warning("Could not fetch stats (%s). Using defaults.", e)
-            stats = {"commits": 0, "stars": 0, "prs": 0, "issues": 0, "repos": 0}
+        except StatsFetchError as e:
+            # Never fall back to zeros: a card of zeros looks like real data and
+            # hides the failure. Fail the run so it is visible in the Actions log.
+            logger.error("Could not fetch stats: %s", e)
+            _actions_error("Stats fetch failed", str(e))
+            logger.error("Refusing to generate SVGs with placeholder stats.")
+            sys.exit(1)
 
         logger.info("Fetching languages...")
         try:

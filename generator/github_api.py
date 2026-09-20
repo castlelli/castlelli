@@ -1,5 +1,6 @@
 """GitHub API client for fetching user stats and language data."""
 
+import datetime
 import logging
 import os
 import time
@@ -7,6 +8,18 @@ import time
 import requests
 
 logger = logging.getLogger(__name__)
+
+# contributionsCollection covers at most one year per call, so an all-time
+# total is built from contiguous windows of this length.
+WINDOW_DAYS = 365
+
+
+class StatsFetchError(Exception):
+    """Raised when stats could not be fetched.
+
+    Callers must not substitute zeros: committing a telemetry card full of
+    zeros is worse than failing the run, because it looks like real data.
+    """
 
 
 class GitHubAPI:
@@ -54,40 +67,27 @@ class GitHubAPI:
         return resp
 
     def fetch_stats(self) -> dict:
-        """Fetch user statistics. Uses GraphQL if token available, REST otherwise."""
+        """Fetch user statistics. Uses GraphQL if token available, REST otherwise.
+
+        Raises:
+            StatsFetchError: if the stats could not be fetched. A token that
+                is present but produces a GraphQL failure is a real bug, not a
+                transient hiccup, so it is never papered over with public-only
+                REST data or with zeros.
+        """
         if self.token:
             return self._fetch_stats_graphql()
-        return self._fetch_stats_rest()
+        try:
+            return self._fetch_stats_rest()
+        except (requests.exceptions.RequestException, ValueError, KeyError) as e:
+            raise StatsFetchError(f"REST stats fetch failed: {e}") from e
 
-    def _fetch_stats_graphql(self) -> dict:
-        """Fetch stats via GraphQL for accurate counts including private contributions."""
-        query = """
-                query($username: String!) {
-                    user(login: $username) {
-                        repositoriesContributedTo(contributionTypes: [COMMIT, PULL_REQUEST, ISSUE], privacy: ALL) {
-                            totalCount
-                        }
-                        pullRequests {
-                            totalCount
-                        }
-                        issues {
-                            totalCount
-                        }
-                        repositories(ownerAffiliations: OWNER, privacy: ALL, first: 100) {
-                            totalCount
-                            nodes {
-                                stargazerCount
-                                isFork
-                                isPrivate
-                            }
-                        }
-                        contributionsCollection {
-                            totalCommitContributions
-                            restrictedContributionsCount
-                        }
-                    }
-                }
-                """
+    def _graphql(self, query: str) -> dict:
+        """POST a GraphQL query for self.username and return its `data.user`.
+
+        Raises StatsFetchError on any transport failure, on a response
+        carrying `errors`, or on a missing user, so the caller fails loudly.
+        """
         try:
             resp = self._request(
                 "POST",
@@ -95,38 +95,127 @@ class GitHubAPI:
                 json={"query": query, "variables": {"username": self.username}},
             )
             resp.raise_for_status()
-        except requests.exceptions.Timeout:
-            logger.warning("GraphQL request timed out, falling back to REST.")
-            return self._fetch_stats_rest()
-        except requests.exceptions.HTTPError as e:
-            logger.warning("GraphQL HTTP error (%s), falling back to REST.", e)
-            return self._fetch_stats_rest()
+        except requests.exceptions.RequestException as e:
+            raise StatsFetchError(f"GraphQL request failed: {e}") from e
 
-        data = resp.json()
+        try:
+            data = resp.json()
+        except ValueError as e:
+            raise StatsFetchError(f"GraphQL response was not valid JSON: {e}") from e
 
-        if "errors" in data:
-            logger.warning("GraphQL errors: %s", data["errors"])
-            return self._fetch_stats_rest()
+        if data.get("errors"):
+            messages = "; ".join(
+                str(err.get("message", err)) for err in data["errors"]
+            )
+            raise StatsFetchError(f"GraphQL query returned errors: {messages}")
 
-        user = data["data"]["user"]
-        contrib = user["contributionsCollection"]
+        user = (data.get("data") or {}).get("user")
+        if not user:
+            raise StatsFetchError(
+                f"GraphQL returned no user data for '{self.username}'."
+            )
+        return user
+
+    def _fetch_stats_graphql(self) -> dict:
+        """Fetch stats via GraphQL for accurate counts including private data.
+
+        The privacy argument is deliberately omitted everywhere: its type is
+        RepositoryPrivacy, whose only values are PUBLIC and PRIVATE. Omitting
+        it means "no filter", which is what includes private repos.
+        """
+        query = """
+                query($username: String!) {
+                    user(login: $username) {
+                        createdAt
+                        pullRequests {
+                            totalCount
+                        }
+                        issues {
+                            totalCount
+                        }
+                        repositories(ownerAffiliations: OWNER, first: 100) {
+                            totalCount
+                            nodes {
+                                stargazerCount
+                                isFork
+                            }
+                        }
+                    }
+                }
+                """
+        user = self._graphql(query)
         repos = user["repositories"]
 
-        # Only count stars for non-fork repositories; include private repos when
-        # authenticated (privacy: ALL in the query) so private repo stars are included.
+        # Only count stars for non-fork repositories. Private repos are included
+        # because the query applies no privacy filter.
         total_stars = sum(n["stargazerCount"] for n in repos["nodes"] if not n.get("isFork"))
-        total_commits = (
-            contrib["totalCommitContributions"]
-            + contrib["restrictedContributionsCount"]
-        )
 
         return {
-            "commits": total_commits,
+            "commits": self._fetch_commits_all_time(user["createdAt"]),
             "stars": total_stars,
             "prs": user["pullRequests"]["totalCount"],
             "issues": user["issues"]["totalCount"],
             "repos": repos["totalCount"],
         }
+
+    @staticmethod
+    def _contribution_windows(created_at: str, now: datetime.datetime = None) -> list:
+        """Split account lifetime into contiguous <=1 year (from, to) windows."""
+        start = datetime.datetime.strptime(
+            created_at, "%Y-%m-%dT%H:%M:%SZ"
+        ).replace(tzinfo=datetime.timezone.utc)
+        now = now or datetime.datetime.now(datetime.timezone.utc)
+
+        windows = []
+        cursor = start
+        while cursor < now:
+            end = min(cursor + datetime.timedelta(days=WINDOW_DAYS), now)
+            windows.append((cursor, end))
+            cursor = end
+        return windows
+
+    def _fetch_commits_all_time(self, created_at: str) -> int:
+        """Sum commit contributions over every year since the account was made.
+
+        contributionsCollection with no from/to covers only the last year, so
+        one aliased window per year is requested in a single query.
+
+        restrictedContributionsCount is deliberately not added: it counts every
+        private contribution type (PRs, issues, reviews), not just commits, and
+        a token that can see the private repos already counts those commits in
+        totalCommitContributions.
+        """
+        windows = self._contribution_windows(created_at)
+        if not windows:
+            logger.warning("Account creation date %s is not in the past.", created_at)
+            return 0
+
+        blocks = "\n".join(
+            f'                        w{i}: contributionsCollection('
+            f'from: "{frm:%Y-%m-%dT%H:%M:%SZ}", to: "{to:%Y-%m-%dT%H:%M:%SZ}") {{\n'
+            f"                            totalCommitContributions\n"
+            f"                        }}"
+            for i, (frm, to) in enumerate(windows)
+        )
+        query = (
+            "\n                query($username: String!) {\n"
+            "                    user(login: $username) {\n"
+            f"{blocks}\n"
+            "                    }\n"
+            "                }\n                "
+        )
+
+        user = self._graphql(query)
+        total = sum(
+            user[f"w{i}"]["totalCommitContributions"] for i in range(len(windows))
+        )
+        logger.info(
+            "All-time commits: %d across %d yearly window(s) since %s",
+            total,
+            len(windows),
+            created_at,
+        )
+        return total
 
     def _fetch_stats_rest(self) -> dict:
         """Fallback: fetch stats via REST API (public data only)."""
@@ -141,19 +230,10 @@ class GitHubAPI:
         for repos in self._paginate_repos():
             total_stars += sum(r.get("stargazers_count", 0) for r in repos)
 
-        # Estimate commits from events (rough approximation without token)
-        events_resp = self._request(
-            "GET",
-            f"{self.REST_URL}/users/{self.username}/events/public",
-            params={"per_page": 100},
-        )
-        events_resp.raise_for_status()
-        events = events_resp.json()
-        commit_count = sum(
-            len(e.get("payload", {}).get("commits", []))
-            for e in events
-            if e.get("type") == "PushEvent"
-        )
+        # Count public commits via the Search API. The Events API no longer
+        # returns PushEvent.payload.commits, so the old estimate that summed
+        # those arrays could only ever produce 0.
+        commit_count = self._search_count(f"author:{self.username}", kind="commits")
 
         # Fetch actual PR count via Search API
         pr_count = self._search_count(f"author:{self.username} type:pr")
@@ -203,12 +283,12 @@ class GitHubAPI:
                 break
             page += 1
 
-    def _search_count(self, query: str) -> int:
+    def _search_count(self, query: str, kind: str = "issues") -> int:
         """Use the GitHub Search API to get a total_count for a query."""
         try:
             resp = self._request(
                 "GET",
-                f"{self.REST_URL}/search/issues",
+                f"{self.REST_URL}/search/{kind}",
                 params={"q": query, "per_page": 1},
             )
             if resp.status_code == 200:
