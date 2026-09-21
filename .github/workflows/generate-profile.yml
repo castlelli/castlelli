@@ -30,6 +30,11 @@ jobs:
       - name: Generate SVGs
         env:
           GITHUB_TOKEN: ${{ secrets.GALAXY_METRICS }}
+          # Read by generator/gitlab_api.py. Actions masks secret values in the
+          # log, and the generator never prints or echoes the token. If this
+          # secret is absent the run still succeeds: GitLab is skipped and the
+          # telemetry card is tagged GITHUB ONLY.
+          GITLAB_TOKEN: ${{ secrets.IGEM_GITLAB_TOKEN }}
         run: python -m generator.main
 
       - name: Commit and push if changed

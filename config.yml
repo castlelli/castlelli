@@ -93,3 +93,26 @@ languages:
     - "Shell"
     - "Makefile"
   max_display: 8
+
+# Optional second data source: GitLab.
+# Its numbers are SUMMED with the GitHub ones, and the telemetry card is tagged
+# with the platforms actually represented, so a failed GitLab fetch shows up as
+# "GITHUB ONLY" on the card instead of silently shrinking the totals.
+#
+# The token is NEVER stored here. It is read from the GITLAB_TOKEN environment
+# variable locally, and from the IGEM_GITLAB_TOKEN repository secret in CI.
+# Required scope: read_api.
+gitlab:
+  enabled: true
+  host: "https://gitlab.igem.org"
+  username: "vcastelli"
+  # GitLab attributes commits by git author EMAIL, not by username, and the
+  # same person often commits under several author names. List every address
+  # you commit with, or those commits go uncounted.
+  emails:
+    - "vcastelli@usp.br"
+    - "castellivinicius07@gmail.com"
+  # true counts group/team projects you belong to, not only your personal
+  # namespace. On gitlab.igem.org the personal namespace is empty, so false
+  # would yield zero projects and zero commits.
+  include_membership: true

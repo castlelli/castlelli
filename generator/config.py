@@ -7,6 +7,55 @@ class ConfigError(ValueError):
     """Raised when config.yml has invalid or missing data."""
 
 
+def _validate_gitlab(gitlab: dict) -> dict:
+    """Validate the optional 'gitlab' block and apply its own defaults.
+
+    Only called when the key is actually present, so a config without a
+    'gitlab' block is left byte-for-byte untouched.
+    """
+    if not isinstance(gitlab, dict):
+        raise ConfigError("'gitlab' must be a mapping.")
+
+    enabled = gitlab.setdefault("enabled", True)
+    if not isinstance(enabled, bool):
+        raise ConfigError("gitlab.enabled must be true or false.")
+    if not enabled:
+        # An explicitly disabled block is inert; nothing else is required.
+        return gitlab
+
+    host = gitlab.get("host")
+    if not host or not isinstance(host, str) or not host.strip():
+        raise ConfigError("gitlab.host is required (e.g. https://gitlab.com).")
+    if not host.startswith(("http://", "https://")):
+        raise ConfigError(
+            f"gitlab.host must start with http:// or https://, got '{host}'."
+        )
+
+    username = gitlab.get("username")
+    if not username or not isinstance(username, str) or not username.strip():
+        raise ConfigError("gitlab.username is required and must be a non-empty string.")
+
+    # Commits are attributed by git author email, not by username, so an empty
+    # list would silently yield zero commits.
+    emails = gitlab.get("emails")
+    if not isinstance(emails, list) or not emails:
+        raise ConfigError(
+            "gitlab.emails must be a non-empty list of the git author emails "
+            "you commit with; GitLab attributes commits by email, not username."
+        )
+    for i, email in enumerate(emails):
+        if not isinstance(email, str) or "@" not in email:
+            raise ConfigError(
+                f"gitlab.emails[{i}] must be an email address, got '{email}'."
+            )
+
+    include_membership = gitlab.setdefault("include_membership", True)
+    if not isinstance(include_membership, bool):
+        raise ConfigError("gitlab.include_membership must be true or false.")
+
+    return gitlab
+
+
 def validate_config(config: dict) -> dict:
     """Validate and apply defaults to a parsed config dict.
 
@@ -87,5 +136,11 @@ def validate_config(config: dict) -> dict:
     lang_cfg = config.setdefault("languages", {})
     lang_cfg.setdefault("exclude", [])
     lang_cfg.setdefault("max_display", 8)
+
+    # gitlab — optional second data source. When the key is absent no default
+    # is injected, so the generator behaves exactly as it did before GitLab
+    # support existed.
+    if "gitlab" in config:
+        config["gitlab"] = _validate_gitlab(config["gitlab"])
 
     return config

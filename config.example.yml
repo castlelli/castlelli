@@ -95,3 +95,29 @@ languages:
     - "Shell"
     - "Makefile"
   max_display: 8               # Maximum number of languages to show
+
+# Optional second data source: GitLab (uncomment to enable).
+# GitLab numbers are SUMMED with the GitHub ones, and the telemetry card gains a
+# provenance tag ("GITHUB + GITLAB"). If the GitLab fetch fails, the GitHub
+# numbers are left untouched and the tag reads "GITHUB ONLY", so a broken run is
+# never mistaken for a quiet one.
+#
+# With no gitlab block and no GITLAB_TOKEN, the generator behaves exactly as it
+# does without GitLab support at all.
+#
+# The token is NEVER stored in this file. Create a GitLab personal access token
+# with the `read_api` scope, then expose it as the GITLAB_TOKEN environment
+# variable locally and as a repository secret in CI.
+#
+# gitlab:
+#   enabled: true
+#   host: "https://gitlab.com"        # or your self-hosted instance URL
+#   username: "your-gitlab-username"
+#   # GitLab attributes commits by git author EMAIL, not by username. List every
+#   # address you commit with, or those commits go uncounted.
+#   emails:
+#     - "you@example.com"
+#     - "you@work.example.com"
+#   # true counts group/team projects you belong to, not only your personal
+#   # namespace. false mirrors GitHub's "owner only" counting.
+#   include_membership: true

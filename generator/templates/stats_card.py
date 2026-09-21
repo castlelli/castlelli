@@ -5,13 +5,17 @@ from generator.utils import METRIC_ICONS, METRIC_LABELS, METRIC_COLORS, format_n
 WIDTH, HEIGHT = 850, 180
 
 
-def render(stats: dict, metrics: list, theme: dict) -> str:
+def render(stats: dict, metrics: list, theme: dict, source_label: str = None) -> str:
     """Render the stats card SVG.
 
     Args:
         stats: dict with keys like commits, stars, prs, issues, repos
         metrics: list of metric keys to display
         theme: color palette dict
+        source_label: optional provenance tag (e.g. "GITHUB + GITLAB") drawn
+            right-aligned in the header. When None, no element is emitted at
+            all, so a single-source run renders byte-identical output to the
+            version of this template that predates multi-source support.
     """
     cell_width = WIDTH / len(metrics)
 
@@ -48,6 +52,17 @@ def render(stats: dict, metrics: list, theme: dict) -> str:
     cells_str = "\n".join(cells)
     dividers_str = "\n".join(dividers)
 
+    # Emitted only when a label is supplied. This is what makes a failed
+    # GitLab fetch visible on the card itself ("GITHUB ONLY") rather than only
+    # in a log line that scrolls away.
+    source_el = ""
+    if source_label:
+        source_el = (
+            f'\n  <text x="{WIDTH - 30}" y="38" text-anchor="end" '
+            f'fill="{theme["text_faint"]}" font-size="11" font-family="monospace" '
+            f'letter-spacing="2">{source_label}</text>'
+        )
+
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{WIDTH}" height="{HEIGHT}" viewBox="0 0 {WIDTH} {HEIGHT}">
   <defs>
     <style>
@@ -69,7 +84,7 @@ def render(stats: dict, metrics: list, theme: dict) -> str:
         fill="{theme['nebula']}" stroke="{theme['star_dust']}" stroke-width="1"/>
 
   <!-- Section title -->
-  <text x="30" y="38" fill="{theme['text_faint']}" font-size="11" font-family="monospace" letter-spacing="3">MISSION TELEMETRY</text>
+  <text x="30" y="38" fill="{theme['text_faint']}" font-size="11" font-family="monospace" letter-spacing="3">MISSION TELEMETRY</text>{source_el}
 
   <!-- Dividers -->
 {dividers_str}

@@ -10,6 +10,7 @@ import yaml
 
 from generator.config import ConfigError, validate_config
 from generator.github_api import GitHubAPI, StatsFetchError
+from generator.gitlab_api import GitLabAPI, GitLabStatsError
 from generator.svg_builder import SVGBuilder
 
 logger = logging.getLogger(__name__)
@@ -32,6 +33,69 @@ def _actions_error(title: str, message: str):
     if os.environ.get("GITHUB_ACTIONS") == "true":
         flat = message.replace("\n", " ").replace("\r", " ")
         print(f"::error title={title}::{flat}", file=sys.stderr)
+
+
+def _actions_warning(title: str, message: str):
+    """Emit a GitHub Actions warning annotation for a non-fatal degradation."""
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        flat = message.replace("\n", " ").replace("\r", " ")
+        print(f"::warning title={title}::{flat}", file=sys.stderr)
+
+
+def _gitlab_config(config: dict):
+    """Return the gitlab block if present and enabled, else None."""
+    gitlab = config.get("gitlab")
+    if not gitlab or not gitlab.get("enabled", True):
+        return None
+    return gitlab
+
+
+def _merge_gitlab_stats(config: dict, stats: dict):
+    """Add GitLab numbers onto the GitHub ones.
+
+    Returns (stats, source_label). A GitLab problem never alters the GitHub
+    figures, but it always changes the label to "GITHUB ONLY" so a degraded run
+    is distinguishable from a genuinely quiet one on the card itself, not just
+    in a log line. source_label is None when GitLab is not configured at all,
+    which keeps the rendered SVG byte-identical to a pre-GitLab run.
+    """
+    gitlab = _gitlab_config(config)
+    if gitlab is None:
+        logger.info("GitLab not configured; using GitHub data only.")
+        return stats, None
+
+    if not os.environ.get("GITLAB_TOKEN"):
+        msg = (
+            "GitLab is configured but GITLAB_TOKEN is not set, so GitLab data "
+            "is EXCLUDED from this run."
+        )
+        logger.warning(msg)
+        _actions_warning("GitLab token missing", msg)
+        return stats, "GITHUB ONLY"
+
+    logger.info("Fetching GitLab stats for @%s...", gitlab["username"])
+    api = GitLabAPI(
+        host=gitlab["host"],
+        username=gitlab["username"],
+        emails=gitlab.get("emails", []),
+        include_membership=gitlab.get("include_membership", True),
+    )
+
+    try:
+        gitlab_stats = api.fetch_stats()
+    except GitLabStatsError as e:
+        logger.error("GitLab stats fetch FAILED: %s", e)
+        logger.error(
+            "GitHub numbers are unaffected. The card will be tagged GITHUB ONLY."
+        )
+        _actions_warning("GitLab stats fetch failed", str(e))
+        return stats, "GITHUB ONLY"
+
+    merged = {key: stats.get(key, 0) + gitlab_stats.get(key, 0) for key in stats}
+    logger.info("GitHub stats:   %s", stats)
+    logger.info("GitLab stats:   %s", gitlab_stats)
+    logger.info("Combined stats: %s", merged)
+    return merged, "GITHUB + GITLAB"
 
 
 def generate(args):
@@ -74,6 +138,9 @@ def generate(args):
         logger.info("Demo mode: using hardcoded stats and languages.")
         stats = DEMO_STATS
         languages = DEMO_LANGUAGES
+        # Demo makes no network calls, so GitLab is not consulted and the card
+        # carries no provenance tag.
+        source_label = None
     else:
         # Fetch GitHub data
         api = GitHubAPI(username)
@@ -89,6 +156,11 @@ def generate(args):
             logger.error("Refusing to generate SVGs with placeholder stats.")
             sys.exit(1)
 
+        stats, source_label = _merge_gitlab_stats(config, stats)
+
+        # Languages stay GitHub-only: GitLab's /languages endpoint returns
+        # percentages while this pipeline works in bytes, and mixing the two
+        # would silently distort the chart.
         logger.info("Fetching languages...")
         try:
             languages = api.fetch_languages()
@@ -100,7 +172,7 @@ def generate(args):
     logger.info("Languages: %d found", len(languages))
 
     # Build SVGs
-    builder = SVGBuilder(config, stats, languages)
+    builder = SVGBuilder(config, stats, languages, source_label=source_label)
     output_dir = os.path.join(os.path.dirname(__file__), "..", "assets", "generated")
     os.makedirs(output_dir, exist_ok=True)
 

@@ -73,3 +73,77 @@ class TestValidateConfig:
     def test_config_none_fails(self):
         with pytest.raises(ConfigError, match="dict"):
             validate_config(None)
+
+
+class TestValidateGitLab:
+    """The optional 'gitlab' block."""
+
+    BLOCK = {
+        "host": "https://gitlab.igem.org",
+        "username": "vcastelli",
+        "emails": ["vcastelli@usp.br", "castellivinicius07@gmail.com"],
+    }
+
+    def test_absent_block_injects_no_key(self, cfg):
+        """The no-GitLab path must stay exactly as it was."""
+        assert "gitlab" not in cfg
+        result = validate_config(cfg)
+        assert "gitlab" not in result
+
+    def test_valid_block_passes_and_applies_defaults(self, cfg):
+        cfg["gitlab"] = dict(self.BLOCK)
+        result = validate_config(cfg)
+
+        assert result["gitlab"]["enabled"] is True
+        assert result["gitlab"]["include_membership"] is True
+        assert result["gitlab"]["host"] == "https://gitlab.igem.org"
+
+    def test_disabled_block_needs_nothing_else(self, cfg):
+        cfg["gitlab"] = {"enabled": False}
+        result = validate_config(cfg)
+        assert result["gitlab"]["enabled"] is False
+
+    def test_block_must_be_a_mapping(self, cfg):
+        cfg["gitlab"] = ["not", "a", "mapping"]
+        with pytest.raises(ConfigError, match="'gitlab' must be a mapping"):
+            validate_config(cfg)
+
+    def test_enabled_must_be_boolean(self, cfg):
+        cfg["gitlab"] = {**self.BLOCK, "enabled": "yes"}
+        with pytest.raises(ConfigError, match="gitlab.enabled"):
+            validate_config(cfg)
+
+    def test_host_required(self, cfg):
+        cfg["gitlab"] = {k: v for k, v in self.BLOCK.items() if k != "host"}
+        with pytest.raises(ConfigError, match="gitlab.host is required"):
+            validate_config(cfg)
+
+    def test_host_must_have_a_scheme(self, cfg):
+        cfg["gitlab"] = {**self.BLOCK, "host": "gitlab.igem.org"}
+        with pytest.raises(ConfigError, match="must start with http"):
+            validate_config(cfg)
+
+    def test_username_required(self, cfg):
+        cfg["gitlab"] = {**self.BLOCK, "username": "  "}
+        with pytest.raises(ConfigError, match="gitlab.username"):
+            validate_config(cfg)
+
+    def test_emails_required_and_non_empty(self, cfg):
+        cfg["gitlab"] = {**self.BLOCK, "emails": []}
+        with pytest.raises(ConfigError, match="gitlab.emails"):
+            validate_config(cfg)
+
+    def test_emails_must_be_a_list(self, cfg):
+        cfg["gitlab"] = {**self.BLOCK, "emails": "vcastelli@usp.br"}
+        with pytest.raises(ConfigError, match="gitlab.emails"):
+            validate_config(cfg)
+
+    def test_email_entries_must_look_like_addresses(self, cfg):
+        cfg["gitlab"] = {**self.BLOCK, "emails": ["not-an-address"]}
+        with pytest.raises(ConfigError, match=r"gitlab.emails\[0\]"):
+            validate_config(cfg)
+
+    def test_include_membership_must_be_boolean(self, cfg):
+        cfg["gitlab"] = {**self.BLOCK, "include_membership": "true"}
+        with pytest.raises(ConfigError, match="gitlab.include_membership"):
+            validate_config(cfg)

@@ -10,10 +10,13 @@ class SVGBuilder:
     which resolves theme defaults and applies missing optional fields.
     """
 
-    def __init__(self, config: dict, stats: dict, languages: dict):
+    def __init__(self, config: dict, stats: dict, languages: dict, source_label: str = None):
         self.config = config
         self.stats = stats
         self.languages = languages
+        # Names the platforms the numbers actually came from. None means
+        # single-source, which renders the card exactly as it did before.
+        self.source_label = source_label
         self.theme = config["theme"]
         self.galaxy_arms = config.get("galaxy_arms", [])
         self.projects = config.get("projects", [])
@@ -32,6 +35,7 @@ class SVGBuilder:
             stats=self.stats,
             metrics=metrics,
             theme=self.theme,
+            source_label=self.source_label,
         )
 
     def render_tech_stack(self) -> str:
