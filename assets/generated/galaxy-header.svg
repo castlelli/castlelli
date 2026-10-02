@@ -361,42 +361,30 @@
     <line x1="416.1" y1="132.0" x2="409.7" y2="115.3" stroke="#D4FF00" stroke-width="0.5" opacity="0.25" stroke-dasharray="2 2"/>
     <text x="409.7" y="118.3" text-anchor="middle" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.2" filter="url(#label-glow)">Python</text>
     <text x="409.7" y="118.3" text-anchor="middle" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.85">Python</text>
-    <circle cx="455.4" cy="127.2" r="2.5" fill="#D4FF00" opacity="0.85">
+    <circle cx="506.5" cy="127.2" r="2.5" fill="#D4FF00" opacity="0.85">
       <animate attributeName="opacity" values="0.85;1;0.85" dur="5s" begin="0.7s" repeatCount="indefinite"/>
     </circle>
-    <line x1="455.4" y1="127.2" x2="468.7" y2="115.1" stroke="#D4FF00" stroke-width="0.5" opacity="0.25" stroke-dasharray="2 2"/>
-    <text x="468.7" y="118.1" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.2" filter="url(#label-glow)">Biopython</text>
-    <text x="468.7" y="118.1" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.85">Biopython</text>
-    <circle cx="506.5" cy="127.2" r="2.5" fill="#D4FF00" opacity="0.85">
+    <line x1="506.5" y1="127.2" x2="523.5" y2="121.4" stroke="#D4FF00" stroke-width="0.5" opacity="0.25" stroke-dasharray="2 2"/>
+    <text x="523.5" y="124.4" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.2" filter="url(#label-glow)">Biopython</text>
+    <text x="523.5" y="124.4" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.85">Biopython</text>
+    <circle cx="603.6" cy="146.1" r="2.5" fill="#D4FF00" opacity="0.85">
       <animate attributeName="opacity" values="0.85;1;0.85" dur="5s" begin="1.4s" repeatCount="indefinite"/>
     </circle>
-    <line x1="506.5" y1="127.2" x2="523.5" y2="121.4" stroke="#D4FF00" stroke-width="0.5" opacity="0.25" stroke-dasharray="2 2"/>
-    <text x="523.5" y="124.4" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.2" filter="url(#label-glow)">Pandas</text>
-    <text x="523.5" y="124.4" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.85">Pandas</text>
-    <circle cx="559.7" cy="133.4" r="2.5" fill="#D4FF00" opacity="0.85">
+    <line x1="603.6" y1="146.1" x2="621.6" y2="145.2" stroke="#D4FF00" stroke-width="0.5" opacity="0.25" stroke-dasharray="2 2"/>
+    <text x="621.6" y="148.2" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.2" filter="url(#label-glow)">Comparative Genomics</text>
+    <text x="621.6" y="148.2" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.85">Comparative Genomics</text>
+    <circle cx="620.0" cy="184.7" r="2.5" fill="#D4FF00" opacity="0.85">
       <animate attributeName="opacity" values="0.85;1;0.85" dur="5s" begin="2.0999999999999996s" repeatCount="indefinite"/>
     </circle>
-    <line x1="559.7" y1="133.4" x2="577.5" y2="130.6" stroke="#D4FF00" stroke-width="0.5" opacity="0.25" stroke-dasharray="2 2"/>
-    <text x="577.5" y="133.6" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.2" filter="url(#label-glow)">Comparative Genomics</text>
-    <text x="577.5" y="133.6" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.85">Comparative Genomics</text>
-    <circle cx="603.6" cy="146.1" r="2.5" fill="#D4FF00" opacity="0.85">
+    <line x1="620.0" y1="184.7" x2="637.8" y2="187.4" stroke="#D4FF00" stroke-width="0.5" opacity="0.25" stroke-dasharray="2 2"/>
+    <text x="637.8" y="190.4" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.2" filter="url(#label-glow)">Machine Learning</text>
+    <text x="637.8" y="190.4" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.85">Machine Learning</text>
+    <circle cx="503.7" cy="221.2" r="2.5" fill="#D4FF00" opacity="0.85">
       <animate attributeName="opacity" values="0.85;1;0.85" dur="5s" begin="2.8s" repeatCount="indefinite"/>
     </circle>
-    <line x1="603.6" y1="146.1" x2="621.6" y2="145.2" stroke="#D4FF00" stroke-width="0.5" opacity="0.25" stroke-dasharray="2 2"/>
-    <text x="621.6" y="148.2" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.2" filter="url(#label-glow)">Genomic Big Data</text>
-    <text x="621.6" y="148.2" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.85">Genomic Big Data</text>
-    <circle cx="626.8" cy="163.9" r="2.5" fill="#D4FF00" opacity="0.85">
-      <animate attributeName="opacity" values="0.85;1;0.85" dur="5s" begin="3.5s" repeatCount="indefinite"/>
-    </circle>
-    <line x1="626.8" y1="163.9" x2="644.7" y2="164.7" stroke="#D4FF00" stroke-width="0.5" opacity="0.25" stroke-dasharray="2 2"/>
-    <text x="644.7" y="167.7" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.2" filter="url(#label-glow)">Machine Learning</text>
-    <text x="644.7" y="167.7" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.85">Machine Learning</text>
-    <circle cx="620.0" cy="184.7" r="2.5" fill="#D4FF00" opacity="0.85">
-      <animate attributeName="opacity" values="0.85;1;0.85" dur="5s" begin="4.199999999999999s" repeatCount="indefinite"/>
-    </circle>
-    <line x1="620.0" y1="184.7" x2="637.8" y2="187.4" stroke="#D4FF00" stroke-width="0.5" opacity="0.25" stroke-dasharray="2 2"/>
-    <text x="637.8" y="190.4" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.2" filter="url(#label-glow)">LLMs</text>
-    <text x="637.8" y="190.4" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.85">LLMs</text>
+    <line x1="503.7" y1="221.2" x2="517.5" y2="232.8" stroke="#D4FF00" stroke-width="0.5" opacity="0.25" stroke-dasharray="2 2"/>
+    <text x="517.5" y="235.8" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.2" filter="url(#label-glow)">LLMs</text>
+    <text x="517.5" y="235.8" text-anchor="start" fill="#D4FF00" font-size="9" font-family="monospace" opacity="0.85">LLMs</text>
     <circle cx="515.6" cy="152.8" r="2.5" fill="#00F0FF" opacity="0.85">
       <animate attributeName="opacity" values="0.85;1;0.85" dur="5s" begin="0.0s" repeatCount="indefinite"/>
     </circle>
