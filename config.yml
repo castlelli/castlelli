@@ -43,9 +43,7 @@ galaxy_arms:
     items:
       - "Python"
       - "Biopython"
-      - "Pandas"
       - "Comparative Genomics"
-      - "Genomic Big Data"
       - "Machine Learning"
       - "LLMs"
   - name: "Systems & Embedded"
