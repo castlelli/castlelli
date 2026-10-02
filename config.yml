@@ -7,7 +7,7 @@ username: castlelli
 # Profile information displayed in the galaxy header
 profile:
   name: "Vinicius Castelli"
-  tagline: "Full Stack Developer & Engineering Student"
+  tagline: "Computer Engineering Student & Bioinformatics Researcher"
   company: "Scientist at São Paulo Biomedical Sciences Institute"
   location: "São Paulo, Brazil"
   bio: |
@@ -24,11 +24,12 @@ galaxy_arms:
   - name: "Product Design & Frontend"
     color: "white" # Mapped to Acid Green (Your Brand Signature)
     items:
-      - "Typescript"
-      - "React"
-      - "Tailwind"
-      - "Next.js"
+      - "TypeScript"
       - "Vue.js"
+      - "Nuxt"
+      - "React"
+      - "Next.js"
+      - "Tailwind"
       - "Figma"
   - name: "Backend & APIs"
     color: "dendrite_violet" # Mapped to Deep Plasma Purple (Galactic Vibe)
@@ -36,27 +37,39 @@ galaxy_arms:
       - "FastAPI"
       - "Django"
       - "Entity Framework"
-      - "Laravel"
       - "Java & Spring"
-      - "C & C++"
   - name: "Bioinformatics"
     color: "axon_amber"
     items:
+      - "Python"
       - "Biopython"
       - "Pandas"
+      - "Comparative Genomics"
       - "Genomic Big Data"
       - "Machine Learning"
-      - "AI for Science"
-      - "Comparative Genomics"
+      - "LLMs"
+  - name: "Systems & Embedded"
+    color: "synapse_cyan"
+    items:
+      - "Rust"
+      - "C & C++"
+      - "Embedded Systems"
 
 # Featured projects shown as constellation stars
+# "repo" is only a display label (text after the last "/"); links live in README.md
 projects:
-  - repo: "(soon)"
+  - repo: "leepusp/rotifer"
     arm: 2
-    description: "Smart pest control for farmers w/ low-cost hardware. Coming soon."
-  - repo: "leepbioinfo/rotifer"
+    description: "Open-source package for comparative genomics"
+  - repo: "castlelli/Vildagliptin-for-Sclerosis"
     arm: 2
-    description: "A powerful, open-source and robust tool for comparative genomics & bioinformatics."
+    description: "Drug repurposing analysis for systemic sclerosis"
+  - repo: "castlelli/VivaPay"
+    arm: 1
+    description: "School fair payments: 5k+ users, 10k transactions"
+  - repo: "iGEM USP 2026 Wiki"
+    arm: 0
+    description: "Lead developer of the iGEM USP-Brazil 2026 wiki"
 
 # Theme color overrides
 # "TOXIC GALAXY" PALETTE - Industrial Sci-Fi

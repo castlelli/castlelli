@@ -24,6 +24,11 @@
 
 <div align="center">
   <img src="./assets/generated/projects-constellation.svg" width="850" alt="Featured Projects"/>
+  <br/>
+  <a href="https://leepusp.github.io/rotifer">ROTIFER</a> ·
+  <a href="https://github.com/castlelli/Vildagliptin-for-Sclerosis">Vildagliptin for Sclerosis</a> ·
+  <a href="https://github.com/castlelli/VivaPay">VivaPay</a> ·
+  <a href="https://2026.igem.wiki/usp-brazil">iGEM USP 2026 Wiki</a>
 </div>
 
 <br/>

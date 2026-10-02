@@ -305,7 +305,7 @@ def render(projects: list, galaxy_arms: list, theme: dict) -> str:
     """
     all_arm_colors = resolve_arm_colors(galaxy_arms, theme)
 
-    n = min(len(projects), 3)
+    n = min(len(projects), 4)
 
     if n == 0:
         # No projects — render an empty card
@@ -319,6 +319,8 @@ def render(projects: list, galaxy_arms: list, theme: dict) -> str:
     # Adaptive card sizing
     if n == 2:
         card_width = 340
+    elif n == 4:
+        card_width = 192
     else:
         card_width = 240
     total_cards_width = card_width * n

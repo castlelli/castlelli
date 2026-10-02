@@ -10,7 +10,7 @@ MAX_RADIUS = 220
 SPIRAL_TURNS = 0.85
 NUM_POINTS = 30
 X_SCALE, Y_SCALE = 1.5, 0.38
-START_ANGLES = [25, 150, 265]
+START_ANGLES = [0, 90, 180, 270]
 
 
 def _build_glow_filters(galaxy_arms, arm_colors):
@@ -257,7 +257,7 @@ def _build_tech_labels(galaxy_arms, arm_colors, all_arm_points, cx, cy):
 def _build_project_stars(projects, galaxy_arms, arm_colors, all_arm_points):
     """Build project star circles."""
     project_stars = []
-    for proj in projects[:3]:
+    for proj in projects[:4]:
         arm_idx = proj.get("arm", 0) % len(galaxy_arms)
         arm = galaxy_arms[arm_idx]
         color = arm_colors[arm_idx]
