@@ -7,6 +7,7 @@ The contract these lock down:
 """
 
 import copy
+import json
 import os
 import pathlib
 
@@ -202,3 +203,62 @@ def test_github_only_tag_is_visible_on_the_card(cfg):
     config = validate_config(copy.deepcopy(cfg))
     builder = SVGBuilder(config, dict(GITHUB_STATS), {}, source_label="GITHUB ONLY")
     assert "GITHUB ONLY" in builder.render_stats_card()
+
+
+# --- degraded with a cache: last good GitLab numbers are reused ---------
+
+
+def test_success_writes_the_cache(monkeypatch, tmp_path):
+    monkeypatch.setenv("GITLAB_TOKEN", "t")
+    monkeypatch.setattr("generator.main.GitLabAPI", FakeGitLabAPI)
+    cache = tmp_path / "gitlab-cache.json"
+
+    _merge_gitlab_stats({"gitlab": dict(GITLAB_CFG)}, dict(GITHUB_STATS), str(cache))
+
+    assert json.loads(cache.read_text())["stats"] == GITLAB_STATS
+
+
+def test_failure_reuses_cached_numbers_and_dates_them(monkeypatch, tmp_path):
+    monkeypatch.setenv("GITLAB_TOKEN", "t")
+    monkeypatch.setattr("generator.main.GitLabAPI", ExplodingGitLabAPI)
+    cache = tmp_path / "gitlab-cache.json"
+    cache.write_text(json.dumps({"stats": GITLAB_STATS, "fetched_on": "2026-10-19"}))
+
+    merged, label = _merge_gitlab_stats({"gitlab": dict(GITLAB_CFG)}, dict(GITHUB_STATS), str(cache))
+
+    assert merged["commits"] == 659 + 49
+    assert label == "GITHUB + GITLAB (CACHED 2026-10-19)"
+
+
+def test_missing_token_reuses_cache(monkeypatch, tmp_path):
+    cache = tmp_path / "gitlab-cache.json"
+    cache.write_text(json.dumps({"stats": GITLAB_STATS, "fetched_on": "2026-10-19"}))
+
+    merged, label = _merge_gitlab_stats({"gitlab": dict(GITLAB_CFG)}, dict(GITHUB_STATS), str(cache))
+
+    assert merged["prs"] == 27 + 8
+    assert "CACHED" in label
+
+
+def test_failure_does_not_overwrite_the_cache(monkeypatch, tmp_path):
+    monkeypatch.setenv("GITLAB_TOKEN", "t")
+    monkeypatch.setattr("generator.main.GitLabAPI", ExplodingGitLabAPI)
+    cache = tmp_path / "gitlab-cache.json"
+    original = json.dumps({"stats": GITLAB_STATS, "fetched_on": "2026-10-19"})
+    cache.write_text(original)
+
+    _merge_gitlab_stats({"gitlab": dict(GITLAB_CFG)}, dict(GITHUB_STATS), str(cache))
+
+    assert cache.read_text() == original
+
+
+def test_corrupt_cache_falls_back_to_github_only(monkeypatch, tmp_path):
+    monkeypatch.setenv("GITLAB_TOKEN", "t")
+    monkeypatch.setattr("generator.main.GitLabAPI", ExplodingGitLabAPI)
+    cache = tmp_path / "gitlab-cache.json"
+    cache.write_text("{not json")
+
+    merged, label = _merge_gitlab_stats({"gitlab": dict(GITLAB_CFG)}, dict(GITHUB_STATS), str(cache))
+
+    assert merged == GITHUB_STATS
+    assert label == "GITHUB ONLY"

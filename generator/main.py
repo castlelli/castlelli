@@ -1,6 +1,8 @@
 """Entry point for the Galaxy Profile README generator."""
 
 import argparse
+import datetime
+import json
 import logging
 import os
 import sys
@@ -50,13 +52,63 @@ def _gitlab_config(config: dict):
     return gitlab
 
 
-def _merge_gitlab_stats(config: dict, stats: dict):
+GITLAB_CACHE_FILE = "gitlab-cache.json"
+
+
+def _read_gitlab_cache(cache_path):
+    """Return (stats, fetched_on) from the last good GitLab fetch, or None."""
+    if not cache_path:
+        return None
+    try:
+        with open(cache_path, "r") as f:
+            data = json.load(f)
+        return dict(data["stats"]), str(data["fetched_on"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+
+
+def _write_gitlab_cache(cache_path, gitlab_stats: dict):
+    if not cache_path:
+        return
+    data = {
+        "stats": gitlab_stats,
+        "fetched_on": datetime.datetime.now(datetime.timezone.utc).date().isoformat(),
+    }
+    try:
+        with open(cache_path, "w") as f:
+            json.dump(data, f, indent=2, sort_keys=True)
+            f.write("\n")
+    except OSError as e:
+        logger.warning("Could not write GitLab cache (%s).", e)
+
+
+def _sum_stats(stats: dict, gitlab_stats: dict) -> dict:
+    return {key: stats.get(key, 0) + gitlab_stats.get(key, 0) for key in stats}
+
+
+def _gitlab_fallback(stats: dict, cache_path):
+    """Use the last good GitLab numbers when today's fetch is unavailable.
+
+    The card still says the GitLab part is stale and from when, so a broken
+    token cannot pass for live data; it just stops the totals from shrinking.
+    """
+    cached = _read_gitlab_cache(cache_path)
+    if cached is None:
+        logger.error("No cached GitLab stats. The card will be tagged GITHUB ONLY.")
+        return stats, "GITHUB ONLY"
+    gitlab_stats, fetched_on = cached
+    logger.warning("Using cached GitLab stats from %s: %s", fetched_on, gitlab_stats)
+    return _sum_stats(stats, gitlab_stats), f"GITHUB + GITLAB (CACHED {fetched_on})"
+
+
+def _merge_gitlab_stats(config: dict, stats: dict, cache_path=None):
     """Add GitLab numbers onto the GitHub ones.
 
     Returns (stats, source_label). A GitLab problem never alters the GitHub
-    figures, but it always changes the label to "GITHUB ONLY" so a degraded run
-    is distinguishable from a genuinely quiet one on the card itself, not just
-    in a log line. source_label is None when GitLab is not configured at all,
+    figures. When GitLab is unavailable, the last good GitLab numbers saved at
+    cache_path are added instead and the label names their date; with no cache
+    the label is "GITHUB ONLY". Either way a degraded run is distinguishable
+    from a genuinely quiet one on the card itself, not just in a log line. source_label is None when GitLab is not configured at all,
     which keeps the rendered SVG byte-identical to a pre-GitLab run.
     """
     gitlab = _gitlab_config(config)
@@ -71,7 +123,7 @@ def _merge_gitlab_stats(config: dict, stats: dict):
         )
         logger.warning(msg)
         _actions_warning("GitLab token missing", msg)
-        return stats, "GITHUB ONLY"
+        return _gitlab_fallback(stats, cache_path)
 
     logger.info("Fetching GitLab stats for @%s...", gitlab["username"])
     api = GitLabAPI(
@@ -85,13 +137,12 @@ def _merge_gitlab_stats(config: dict, stats: dict):
         gitlab_stats = api.fetch_stats()
     except GitLabStatsError as e:
         logger.error("GitLab stats fetch FAILED: %s", e)
-        logger.error(
-            "GitHub numbers are unaffected. The card will be tagged GITHUB ONLY."
-        )
+        logger.error("GitHub numbers are unaffected.")
         _actions_warning("GitLab stats fetch failed", str(e))
-        return stats, "GITHUB ONLY"
+        return _gitlab_fallback(stats, cache_path)
 
-    merged = {key: stats.get(key, 0) + gitlab_stats.get(key, 0) for key in stats}
+    _write_gitlab_cache(cache_path, gitlab_stats)
+    merged = _sum_stats(stats, gitlab_stats)
     logger.info("GitHub stats:   %s", stats)
     logger.info("GitLab stats:   %s", gitlab_stats)
     logger.info("Combined stats: %s", merged)
@@ -156,7 +207,10 @@ def generate(args):
             logger.error("Refusing to generate SVGs with placeholder stats.")
             sys.exit(1)
 
-        stats, source_label = _merge_gitlab_stats(config, stats)
+        cache_path = os.path.join(
+            os.path.dirname(__file__), "..", "assets", "generated", GITLAB_CACHE_FILE
+        )
+        stats, source_label = _merge_gitlab_stats(config, stats, cache_path)
 
         # Languages stay GitHub-only: GitLab's /languages endpoint returns
         # percentages while this pipeline works in bytes, and mixing the two
